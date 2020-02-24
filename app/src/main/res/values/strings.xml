@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">mtask_mobile</string>
+    <string name="title_activity_task">Task</string>
 </resources>

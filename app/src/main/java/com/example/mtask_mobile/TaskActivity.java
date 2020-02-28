@@ -14,8 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
+import com.example.mtask_mobile.vo.BranchGroupInfo;
+
+import org.litepal.LitePal;
+
+import java.util.List;
 
 public class TaskActivity extends AppCompatActivity {
+    private static final String TAG = TaskActivity.class.getSimpleName();
 
     public static final String TASK_NAME = "task_name";
 
@@ -47,6 +54,10 @@ public class TaskActivity extends AppCompatActivity {
         Glide.with(this).load(taskOwnerImageUrl).placeholder(R.drawable.ic_launcher_background).error(R.drawable.ic_launcher_foreground).into(taskOwnerImageView);
         String taskContent = generateTaskContent(taskName);
         taskContentText.setText(taskContent);
+
+        List<BranchGroupInfo> branchGroupInfoList = LitePal.findAll(BranchGroupInfo.class);
+        LogUtil.d(TAG, branchGroupInfoList.toString());
+
     }
 
     private String generateTaskContent (String taskName) {

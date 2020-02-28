@@ -3,10 +3,12 @@ package com.example.mtask_mobile.vo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class BranchGroupInfo implements Parcelable {
+import org.litepal.crud.LitePalSupport;
+
+public class BranchGroupInfo extends LitePalSupport implements Parcelable {
     private String branchId;
     private String parentId;
-    private String _id;
+    private long _id;
     private String name;
     private String orderNo;
     private String isDelete;
@@ -17,7 +19,7 @@ public class BranchGroupInfo implements Parcelable {
 
     }
 
-    public BranchGroupInfo(String branchId, String parentId, String _id, String name, String orderNo, String isDelete, String createdAt, String updatedAt) {
+    public BranchGroupInfo(String branchId, String parentId, long _id, String name, String orderNo, String isDelete, String createdAt, String updatedAt) {
         this.branchId = branchId;
         this.parentId = parentId;
         this._id = _id;
@@ -44,11 +46,11 @@ public class BranchGroupInfo implements Parcelable {
         this.parentId = parentId;
     }
 
-    public String get_id() {
+    public long get_id() {
         return _id;
     }
 
-    public void set_id(String _id) {
+    public void set_id(long _id) {
         this._id = _id;
     }
 
@@ -101,7 +103,7 @@ public class BranchGroupInfo implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(branchId);
         dest.writeString(parentId);
-        dest.writeString(_id);
+        dest.writeLong(_id);
         dest.writeString(name);
         dest.writeString(orderNo);
         dest.writeString(isDelete);
@@ -115,7 +117,7 @@ public class BranchGroupInfo implements Parcelable {
             BranchGroupInfo groupInfo = new BranchGroupInfo();
             groupInfo.branchId = source.readString();
             groupInfo.parentId = source.readString();
-            groupInfo._id = source.readString();
+            groupInfo._id = source.readLong();
             groupInfo.name = source.readString();
             groupInfo.orderNo = source.readString();
             groupInfo.isDelete = source.readString();

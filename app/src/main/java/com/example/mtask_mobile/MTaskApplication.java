@@ -14,14 +14,17 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
+import com.example.mtask_mobile.vo.BranchGroupInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.LitePal;
+import org.litepal.LitePalApplication;
 
-public class MTaskApplicatiom extends Application {
+public class MTaskApplication extends LitePalApplication {
 
-    private final static String TAG = MTaskApplicatiom.class.getSimpleName();
+    private final static String TAG = MTaskApplication.class.getSimpleName();
     private static Context context;
 
     @Override
@@ -30,6 +33,7 @@ public class MTaskApplicatiom extends Application {
         context = getApplicationContext();
 
         requestBranchList();
+        LitePal.getDatabase();
     }
 
     public static Context getContext () {
@@ -54,6 +58,14 @@ public class MTaskApplicatiom extends Application {
                             if (result) {
                                 JSONArray branchList =  response.getJSONArray("data");
                                 LogUtil.d(TAG, branchList.toString());
+                                for (int i = 0; i < branchList.length(); i ++) {
+                                    JSONObject object = branchList.getJSONObject(i);
+                                    BranchGroupInfo branchGroupInfo = new BranchGroupInfo();
+                                    branchGroupInfo.setBranchId(object.getString("id"));
+                                    branchGroupInfo.setOrderNo(object.getString("orderNo"));
+                                    branchGroupInfo.setName(object.getString("name"));
+                                    branchGroupInfo.save();
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

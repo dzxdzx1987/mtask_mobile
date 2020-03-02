@@ -26,10 +26,14 @@ import org.json.JSONObject;
 import org.litepal.LitePal;
 import org.litepal.LitePalApplication;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MTaskApplication extends LitePalApplication {
 
     private final static String TAG = MTaskApplication.class.getSimpleName();
     private static Context context;
+    private final String COOKIE = "_ga=GA1.3.438162699.1556609940; connect.sid=s%3AJ9oXXSTJPCUKyQyMKJZEEMl_s0fPTLDF.iEVytAkWNrLZ%2BhMK9iS9E8FDond0FdNbQKBJOVK5plg; _gid=GA1.3.1781206052.1583136568; _gat_gtag_UA_131151268_1=1";
 
     @Override
     public void onCreate() {
@@ -39,6 +43,31 @@ public class MTaskApplication extends LitePalApplication {
         // Utility.requestBranchList();
         LitePal.getDatabase();
         // LitePal.deleteAll(BranchGroupInfo.class);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Cookie", COOKIE);
+        HttpUtil.getInstance().makeJsonObjectRequestWithHeaders("https://mtask.motrex.co.kr/login", headers,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            boolean result = response.getBoolean("result");
+                            if (result) {
+                                JSONObject userInfo =  response.getJSONObject("data");
+                                LogUtil.d(TAG, userInfo.toString());
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            LogUtil.e(TAG, e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        LogUtil.e(TAG, error.getMessage());
+                    }
+                });
     }
 
     public static Context getContext () {

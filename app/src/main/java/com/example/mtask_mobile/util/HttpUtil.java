@@ -1,5 +1,6 @@
 package com.example.mtask_mobile.util;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.Request;
@@ -12,6 +13,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.mtask_mobile.MTaskApplication;
 
 import org.json.JSONObject;
+
+import java.util.Map;
 
 public class HttpUtil {
 
@@ -43,4 +46,16 @@ public class HttpUtil {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, successListener, errorListener);
         queue.add(request);
     }
+
+    public void makeJsonObjectRequestWithHeaders(String url, final Map<String, String> headers, Response.Listener<JSONObject> successListener, Response.ErrorListener errorListener) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, successListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = headers;
+                return params;
+            }
+        };
+        queue.add(request);
+    }
+
 }

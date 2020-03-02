@@ -1,5 +1,6 @@
 package com.example.mtask_mobile;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -106,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.more:
                 Toast.makeText(this, "You clicked More", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, ChooseBranchActivity.class);
+                startActivity(intent);
                 break;
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);

@@ -3,9 +3,11 @@ package com.example.mtask_mobile.vo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.LitePalSupport;
 
 public class BranchGroupInfo extends LitePalSupport implements Parcelable {
+    @Column(unique = true)
     private String branchId;
     private String parentId;
     private long _id;

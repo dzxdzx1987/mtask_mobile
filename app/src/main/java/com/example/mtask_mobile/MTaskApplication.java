@@ -36,10 +36,9 @@ public class MTaskApplication extends LitePalApplication {
         super.onCreate();
         context = getApplicationContext();
 
-        Utility.requestBranchList();
+        // Utility.requestBranchList();
         LitePal.getDatabase();
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        startService(intent);
+        // LitePal.deleteAll(BranchGroupInfo.class);
     }
 
     public static Context getContext () {

@@ -13,21 +13,22 @@
         android:layout_centerInParent="true" />
 
     <TextView
-        android:id="@+id/username"
+        android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="dzxdzx1987@gmai.com"
         android:textColor="#FFF"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:text="user name"/>
 
     <TextView
+        android:id="@+id/user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/username"
-        android:text="Kevin Dong"
+        android:layout_above="@+id/user_name"
         android:textColor="#FFF"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:text="user email"/>
 
 
 

@@ -3,6 +3,7 @@
     package="com.example.mtask_mobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".MTaskApplication"
@@ -12,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChooseBranchActivity"></activity>
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".ChooseBranchActivity" />
 
         <service
             android:name=".service.AutoUpdateService"

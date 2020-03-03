@@ -4,6 +4,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
 import com.example.mtask_mobile.vo.BranchGroupInfo;
+import com.example.mtask_mobile.vo.BranchUserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +36,33 @@ public class Utility {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    public static boolean handleBranchUserInfo(JSONObject response) {
+        boolean result = false;
+        try {
+            boolean res = response.getBoolean("result");
+            if (res) {
+                JSONObject userInfo =  response.getJSONObject("data");
+                if (userInfo != null) {
+                    BranchUserInfo branchUserInfo = new BranchUserInfo();
+                    branchUserInfo.setBranchId(userInfo.getString("branchId"));
+                    branchUserInfo.setUuid(userInfo.getString("id"));
+                    branchUserInfo.setName(userInfo.getString("name"));
+                    branchUserInfo.setEmail(userInfo.getString("email"));
+                    branchUserInfo.save();
+
+                    result = true;
+                }
+                LogUtil.d(TAG, userInfo.toString());
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LogUtil.e(TAG, e.getMessage());
         }
         return result;
     }

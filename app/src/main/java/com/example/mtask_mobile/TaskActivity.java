@@ -25,6 +25,7 @@ public class TaskActivity extends AppCompatActivity {
     private static final String TAG = TaskActivity.class.getSimpleName();
 
     public static final String TASK_NAME = "task_name";
+    public static final String TASK_CONTENT = "task_desc";
 
     public static final String TASK_OWNER_IMAGE_URL = "task_owner_image_url";
 
@@ -35,6 +36,7 @@ public class TaskActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String taskName = intent.getStringExtra(TASK_NAME);
+        String taskContent = intent.getStringExtra(TASK_CONTENT);
         String taskOwnerImageUrl = intent.getStringExtra(TASK_OWNER_IMAGE_URL);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -52,7 +54,7 @@ public class TaskActivity extends AppCompatActivity {
         collapsingToolbarLayout.setTitle(taskName);
 
         Glide.with(this).load(taskOwnerImageUrl).placeholder(R.drawable.ic_launcher_background).error(R.drawable.ic_launcher_foreground).into(taskOwnerImageView);
-        String taskContent = generateTaskContent(taskName);
+        // String taskContent = generateTaskContent(taskName);
         taskContentText.setText(taskContent);
 
         List<BranchGroupInfo> branchGroupInfoList = LitePal.findAll(BranchGroupInfo.class);

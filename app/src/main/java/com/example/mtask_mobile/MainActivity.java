@@ -1,6 +1,8 @@
 package com.example.mtask_mobile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,15 +19,32 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
 import com.example.mtask_mobile.com.example.mtask_mobile.vo.Task;
+import com.example.mtask_mobile.util.HttpUtil;
+import com.example.mtask_mobile.util.Utility;
+import com.example.mtask_mobile.vo.BranchGroupInfo;
+import com.example.mtask_mobile.vo.BranchUserInfo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final static String TAG = MainActivity.class.getSimpleName();
 
     private DrawerLayout mDrawerLayout;
 
@@ -48,54 +67,72 @@ public class MainActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefresh;
 
+    private TextView mUserName;
+
+    private TextView mUserEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initTasks();
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new TaskAdapter(taskList);
-        recyclerView.setAdapter(adapter);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getString("userId", null) == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            initTasks();
+            requestUserInfo();
+            RecyclerView recyclerView = findViewById(R.id.recycler_view);
+            GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+            recyclerView.setLayoutManager(layoutManager);
+            adapter = new TaskAdapter(taskList);
+            recyclerView.setAdapter(adapter);
 
-        swipeRefresh = findViewById(R.id.swipe_refresh);
-        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshTasks();
+            swipeRefresh = findViewById(R.id.swipe_refresh);
+            swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    refreshTasks();
+                }
+            });
+
+            FloatingActionButton fab = findViewById(R.id.fab);
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            mDrawerLayout = findViewById(R.id.drawer_layout);
+            NavigationView naviView = findViewById(R.id.nav_view);
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
             }
-        });
+            naviView.setCheckedItem(R.id.nav_call);
+            naviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_call:
+                            requestMyTaskList();
+                            break;
+                    }
+                    mDrawerLayout.closeDrawers();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView naviView = findViewById(R.id.nav_view);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
+                    return true;
+                }
+            });
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(MainActivity.this, "FAB clicked", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            requestUserInfo();
         }
-        naviView.setCheckedItem(R.id.nav_call);
-        naviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                mDrawerLayout.closeDrawers();
-
-                return true;
-            }
-        });
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "FAB clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,8 +144,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.more:
                 Toast.makeText(this, "You clicked More", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, ChooseBranchActivity.class);
-                startActivity(intent);
                 break;
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
@@ -146,5 +181,73 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+
+    private void requestUserInfo() {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Cookie", MTaskApplication.COOKIE);
+        HttpUtil.getInstance().makeJsonObjectRequestWithHeaders("https://mtask.motrex.co.kr/login", headers,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        boolean result = Utility.handleBranchUserInfo(response);
+                        if (result) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    BranchUserInfo userInfo = LitePal.findFirst(BranchUserInfo.class);
+                                    mUserName = findViewById(R.id.user_name);
+                                    mUserEmail = findViewById(R.id.user_email);
+                                    mUserName.setText(userInfo.getName());
+                                    mUserEmail.setText(userInfo.getEmail());
+                                }
+                            });
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        LogUtil.e(TAG, error.getMessage());
+                    }
+                });
+    }
+
+    private void requestMyTaskList() {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Cookie", MTaskApplication.COOKIE);
+        HttpUtil.getInstance().makeJsonObjectRequestWithHeaders("https://mtask.motrex.co.kr/my-tasks", headers,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        LogUtil.d(TAG, response.toString());
+                        try {
+                            boolean res = response.getBoolean("result");
+                            if (res) {
+                                taskList.clear();
+                                JSONArray myTaskList =  response.getJSONArray("data");
+                                LogUtil.d(TAG, myTaskList.toString());
+                                for (int i = 0; i < myTaskList.length(); i ++) {
+                                    JSONObject object = myTaskList.getJSONObject(i);
+                                    String taskName = object.getString("title");
+                                    String taskDesc = object.getString("desc");
+
+                                    Task task = new Task(taskName, "", android.text.Html.fromHtml(taskDesc).toString());
+                                    taskList.add(task);
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        LogUtil.e(TAG, error.getMessage());
+                    }
+                });
     }
 }

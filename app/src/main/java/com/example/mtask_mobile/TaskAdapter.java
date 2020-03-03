@@ -56,6 +56,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 Task task = mTaskList.get(position);
                 Intent intent = new Intent(mContext, TaskActivity.class);
                 intent.putExtra(TaskActivity.TASK_NAME, task.getName());
+                intent.putExtra(TaskActivity.TASK_CONTENT, task.getContent());
                 intent.putExtra(TaskActivity.TASK_OWNER_IMAGE_URL, task.getOwnerImageUrl());
                 mContext.startActivity(intent);
 

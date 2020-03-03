@@ -3,11 +3,16 @@ package com.example.mtask_mobile.vo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class BranchUserInfo implements Parcelable {
+import org.litepal.annotation.Column;
+import org.litepal.crud.LitePalSupport;
 
+public class BranchUserInfo extends LitePalSupport implements Parcelable {
+
+    private long _id;
+    @Column(unique = true)
+    private String uuid;
     private String branchId;
     private String branchName;
-    private String id;
     private String name;
     private String photoPath;
     private String employeeNo;
@@ -19,14 +24,12 @@ public class BranchUserInfo implements Parcelable {
     private String officePhone;
     private String birthday;
 
-    public BranchUserInfo () {
 
-    }
-
-    public BranchUserInfo(String branchId, String branchName, String id, String name, String photoPath, String employeeNo, String positionCode, String positionName, String email, String email2, String mobilePhone, String officePhone, String birthday) {
+    public BranchUserInfo(String branchId, String branchName, long id, String uuid, String name, String photoPath, String employeeNo, String positionCode, String positionName, String email, String email2, String mobilePhone, String officePhone, String birthday) {
         this.branchId = branchId;
         this.branchName = branchName;
-        this.id = id;
+        this._id = id;
+        this.uuid = uuid;
         this.name = name;
         this.photoPath = photoPath;
         this.employeeNo = employeeNo;
@@ -37,6 +40,18 @@ public class BranchUserInfo implements Parcelable {
         this.mobilePhone = mobilePhone;
         this.officePhone = officePhone;
         this.birthday = birthday;
+    }
+
+    public BranchUserInfo () {
+
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getBranchId() {
@@ -55,12 +70,12 @@ public class BranchUserInfo implements Parcelable {
         this.branchName = branchName;
     }
 
-    public String getId() {
-        return id;
+    public long getId() {
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(long id) {
+        this._id = id;
     }
 
     public String getName() {
@@ -150,9 +165,10 @@ public class BranchUserInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(_id);
+        dest.writeString(uuid);
         dest.writeString(branchId);
         dest.writeString(branchName);
-        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(photoPath);
         dest.writeString(employeeNo);
@@ -168,10 +184,12 @@ public class BranchUserInfo implements Parcelable {
     public static final Parcelable.Creator<BranchUserInfo> CREATOR = new Creator<BranchUserInfo>() {
         @Override
         public BranchUserInfo createFromParcel(Parcel source) {
+
             BranchUserInfo user = new BranchUserInfo();
+            user._id = source.readLong();
+            user.uuid = source.readString();
             user.branchId = source.readString();
             user.branchName = source.readString();
-            user.id = source.readString();
             user.name = source.readString();
             user.photoPath = source.readString();
             user.employeeNo = source.readString();

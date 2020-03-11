@@ -143,7 +143,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.more:
-                Toast.makeText(this, "You clicked More", Toast.LENGTH_SHORT).show();
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs.edit().putString("userId", null).apply();
+                Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
@@ -216,7 +221,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestMyTaskList() {
         Map<String, String> headers = new HashMap<String, String>();
-        headers.put("Cookie", MTaskApplication.COOKIE);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String cookie = prefs.getString("cookie", null);
+        headers.put("Cookie", cookie);
         HttpUtil.getInstance().makeJsonObjectRequestWithHeaders("https://mtask.motrex.co.kr/my-tasks", headers,
                 new Response.Listener<JSONObject>() {
                     @Override

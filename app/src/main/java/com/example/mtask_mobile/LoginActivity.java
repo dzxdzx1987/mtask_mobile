@@ -18,7 +18,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
+import com.example.mtask_mobile.util.DialogUtil;
+import com.example.mtask_mobile.util.HttpUtil;
 import com.example.mtask_mobile.vo.BranchGroupInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = LoginActivity.class.getSimpleName();
@@ -85,16 +97,49 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.login_btn:
                 // login process
+                DialogUtil.getInstance().showProgressDialog(this);
                 String id = mLoginUserIdText.getText().toString();
                 String pass = mLoginPassText.getText().toString();
-                if (id.equals("test") && pass.equals("123")) {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                    prefs.edit().putString("userId", id).apply();
 
-                    Intent in = new Intent(this, MainActivity.class);
-                    startActivity(in);
-                    finish();
-                }
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                prefs.edit().putString("userId", id).apply();
+                String branchId = prefs.getString("branchId", null);
+
+                String loginUrl = "https://mtask.motrex.co.kr/login";
+                Map<String, String> header = new HashMap<>();
+                header.put("Content-Type", "application/json");
+                Map<String, String> body = new HashMap<>();
+                body.put("id", branchId);
+                body.put("email", id);
+                body.put("password", pass);
+                HttpUtil.getInstance().makeRequest(loginUrl, Request.Method.POST, header, body, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            boolean result = response.getBoolean("result");
+                            if (result) {
+                                JSONObject userInfo = response.getJSONObject("data");
+                                LogUtil.d(TAG, userInfo.toString());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        DialogUtil.getInstance().closeProgressDialog();
+                                        Intent in = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(in);
+                                        finish();
+                                    }
+                                });
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        LogUtil.e(TAG, error.toString());
+                    }
+                });
                 break;
         }
 

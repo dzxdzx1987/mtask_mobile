@@ -4,26 +4,26 @@
         <item
             android:id="@+id/nav_call"
             android:icon="@mipmap/nav_call"
-            android:title="Call"/>
+            android:title="My Task"/>
 
         <item
             android:id="@+id/nav_friends"
             android:icon="@mipmap/nav_friends"
-            android:title="Friends"/>
+            android:title="My Board"/>
 
         <item
             android:id="@+id/nav_location"
             android:icon="@mipmap/nav_location"
-            android:title="Location"/>
+            android:title="Favourite Board"/>
 
         <item
             android:id="@+id/nav_mail"
             android:icon="@mipmap/nav_mail"
-            android:title="Mail"/>
+            android:title="Trash"/>
 
         <item
             android:id="@+id/nav_task"
             android:icon="@mipmap/nav_task"
-            android:title="Task"/>
+            android:title="My Info"/>
     </group>
 </menu>

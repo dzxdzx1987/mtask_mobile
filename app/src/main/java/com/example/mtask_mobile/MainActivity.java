@@ -83,7 +83,12 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             initTasks();
-            requestUserInfo();
+            mUserName = findViewById(R.id.user_name);
+            mUserEmail = findViewById(R.id.user_email);
+
+            mUserName.setText(prefs.getString("name", ""));
+            mUserEmail.setText(prefs.getString("email", ""));
+
             RecyclerView recyclerView = findViewById(R.id.recycler_view);
             GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
             recyclerView.setLayoutManager(layoutManager);
@@ -130,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "FAB clicked", Toast.LENGTH_SHORT).show();
                 }
             });
-
-            requestUserInfo();
         }
     }
 
@@ -186,37 +189,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
-    }
-
-    private void requestUserInfo() {
-        Map<String, String> headers = new HashMap<String, String>();
-        headers.put("Cookie", MTaskApplication.COOKIE);
-        HttpUtil.getInstance().makeJsonObjectRequestWithHeaders("https://mtask.motrex.co.kr/login", headers,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        boolean result = Utility.handleBranchUserInfo(response);
-                        if (result) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    BranchUserInfo userInfo = LitePal.findFirst(BranchUserInfo.class);
-                                    mUserName = findViewById(R.id.user_name);
-                                    mUserEmail = findViewById(R.id.user_email);
-                                    mUserName.setText(userInfo.getName());
-                                    mUserEmail.setText(userInfo.getEmail());
-                                }
-                            });
-                        }
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        LogUtil.e(TAG, error.getMessage());
-                    }
-                });
     }
 
     private void requestMyTaskList() {

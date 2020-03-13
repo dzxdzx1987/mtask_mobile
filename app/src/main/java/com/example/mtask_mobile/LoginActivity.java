@@ -22,9 +22,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
+import com.example.mtask_mobile.repository.UserRepository;
 import com.example.mtask_mobile.util.DialogUtil;
 import com.example.mtask_mobile.util.HttpUtil;
 import com.example.mtask_mobile.vo.BranchGroupInfo;
+import com.example.mtask_mobile.vo.LoginUserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +37,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private final String TAG = LoginActivity.class.getSimpleName();
 
+    private Context mContext;
     private Button mSelectBranchBtn;
     private Button mLoginBtn;
     private TextView mSelectedBranchText;
@@ -43,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private final int MESSAGE_EXIT = 1;
     public final static int SELECT_BRANCH_RESULT = 10;
+
 
     private Handler mHandler = new Handler() {
         @Override
@@ -57,11 +61,49 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
+    private UserRepository.IUserCallback userCallback = new UserRepository.IUserCallback(){
+        @Override
+        public void onSuccess(JSONObject object) {
+            JSONObject userInfo = object;
+            try {
+                String id = userInfo.getString("id");
+                String email = userInfo.getString("email");
+                String name = userInfo.getString("name");
+                String companyId = userInfo.getString("companyId");
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                prefs.edit().putString("userId", id).apply();
+                prefs.edit().putString("email", email);
+                prefs.edit().putString("name", name);
+                prefs.edit().putString("companyId", companyId);
+
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+            }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    DialogUtil.getInstance().closeProgressDialog();
+                    Intent in = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(in);
+                    finish();
+                }
+            });
+        }
+
+        @Override
+        public void onFailure() {
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mContext = getApplicationContext();
         if (!isNetworkConnected()) {
             Toast.makeText(this, "Network is unavailable.", Toast.LENGTH_LONG).show();
             Message message = new Message();
@@ -102,44 +144,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String pass = mLoginPassText.getText().toString();
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-                prefs.edit().putString("userId", id).apply();
                 String branchId = prefs.getString("branchId", null);
 
-                String loginUrl = "https://mtask.motrex.co.kr/login";
-                Map<String, String> header = new HashMap<>();
-                header.put("Content-Type", "application/json");
-                Map<String, String> body = new HashMap<>();
-                body.put("id", branchId);
-                body.put("email", id);
-                body.put("password", pass);
-                HttpUtil.getInstance().makeRequest(loginUrl, Request.Method.POST, header, body, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            boolean result = response.getBoolean("result");
-                            if (result) {
-                                JSONObject userInfo = response.getJSONObject("data");
-                                LogUtil.d(TAG, userInfo.toString());
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        DialogUtil.getInstance().closeProgressDialog();
-                                        Intent in = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(in);
-                                        finish();
-                                    }
-                                });
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        LogUtil.e(TAG, error.toString());
-                    }
-                });
+                LoginUserInfo userInfo = new LoginUserInfo();
+                userInfo.setBranchId(branchId);
+                userInfo.setEmail(id);
+                userInfo.setPassword(pass);
+                UserRepository.getInstance().userLogin(userInfo, userCallback);
                 break;
         }
 

@@ -20,6 +20,7 @@ import com.example.mtask_mobile.util.HttpUtil;
 import com.example.mtask_mobile.util.Utility;
 import com.example.mtask_mobile.vo.BranchGroupInfo;
 import com.example.mtask_mobile.vo.BranchUserInfo;
+import com.example.mtask_mobile.vo.LoginUserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;

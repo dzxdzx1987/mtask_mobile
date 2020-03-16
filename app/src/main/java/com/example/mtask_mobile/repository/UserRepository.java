@@ -25,9 +25,11 @@ import java.util.Map;
 public class UserRepository {
     private final static String TAG = UserRepository.class.getSimpleName();
 
+    public static final int PASS_ERROR = 0;
+
     public interface IUserCallback {
         void onSuccess(JSONObject object);
-        void onFailure();
+        void onFailure(int errorCode);
     }
 
     private static UserRepository instance;
@@ -70,7 +72,7 @@ public class UserRepository {
                         LogUtil.d(TAG, userInfo.toString());
 
                     } else {
-                        callback.onFailure();
+                        callback.onFailure(PASS_ERROR);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

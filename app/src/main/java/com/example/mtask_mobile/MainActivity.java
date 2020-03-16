@@ -86,8 +86,13 @@ public class MainActivity extends AppCompatActivity {
             mUserName = findViewById(R.id.user_name);
             mUserEmail = findViewById(R.id.user_email);
 
-            mUserName.setText(prefs.getString("name", ""));
-            mUserEmail.setText(prefs.getString("email", ""));
+            String name = prefs.getString("name",null);
+            String email = prefs.getString("email",null);
+
+            if (name != null && email != null) {
+                mUserName.setText(name);
+                mUserEmail.setText(email);
+            }
 
             RecyclerView recyclerView = findViewById(R.id.recycler_view);
             GridLayoutManager layoutManager = new GridLayoutManager(this, 2);

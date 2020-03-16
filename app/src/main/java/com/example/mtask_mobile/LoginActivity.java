@@ -1,6 +1,7 @@
 package com.example.mtask_mobile;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView mSelectedBranchText;
     private EditText mLoginUserIdText;
     private EditText mLoginPassText;
+    private ProgressDialog progressDialog;
 
     private final int MESSAGE_EXIT = 1;
     public final static int SELECT_BRANCH_RESULT = 10;
@@ -72,10 +74,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String companyId = userInfo.getString("companyId");
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                prefs.edit().putString("userId", id).apply();
+                prefs.edit().putString("userId", id);
                 prefs.edit().putString("email", email);
                 prefs.edit().putString("name", name);
-                prefs.edit().putString("companyId", companyId);
+                prefs.edit().putString("companyId", companyId).apply();
 
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
@@ -84,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    DialogUtil.getInstance().closeProgressDialog();
+                    closeProgressDialog();
                     Intent in = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(in);
                     finish();
@@ -93,8 +95,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         @Override
-        public void onFailure() {
+        public void onFailure(int errorCode) {
+            switch (errorCode) {
+                case 0:
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            closeProgressDialog();
+                            Toast.makeText(mContext, "your password is not correct", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    break;
+                default:
 
+            }
         }
     };
 
@@ -139,7 +153,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.login_btn:
                 // login process
-                DialogUtil.getInstance().showProgressDialog(this);
+                showProgressDialog();
                 String id = mLoginUserIdText.getText().toString();
                 String pass = mLoginPassText.getText().toString();
 
@@ -171,5 +185,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(LoginActivity.this);
+            progressDialog.setMessage("loading...");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
+    }
+
+    private void closeProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 }

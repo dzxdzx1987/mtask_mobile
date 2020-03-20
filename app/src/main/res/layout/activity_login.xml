@@ -1,51 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    tools:context=".LoginActivity">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:layout_marginTop="10dp"/>
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
 
-    <Button
-        android:id="@+id/select_branch_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select Branch"
-        android:layout_marginTop="10dp"/>
+        <ImageView android:src="@drawable/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:id="@+id/selected_branch_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Branch Id"
-        android:layout_marginTop="10dp"/>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/select_branch_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:text="Select Branch" />
 
-    <EditText
-        android:id="@+id/login_id_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Enter Id or email"
-        android:layout_marginTop="10dp"/>
+        <TextView
+            android:id="@+id/selected_branch_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Branch Id"
+            android:layout_marginTop="10dp"/>
 
-    <EditText
-        android:id="@+id/login_pass_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Enter password"
-        android:inputType="textPassword"
-        android:layout_marginTop="10dp"/>
+        <!-- Email Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/login_id_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Email" />
+        </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/login_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login"/>
-</LinearLayout>
+        <!-- Password Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/login_pass_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="Password"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/login_btn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:text="Login"/>
+
+        <TextView android:id="@+id/link_signup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="No account yet? Create one"
+            android:gravity="center"
+            android:textSize="16dip"/>
+
+    </LinearLayout>
+</ScrollView>

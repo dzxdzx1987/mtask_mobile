@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -53,22 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
-    private Task[] tasks = {
-            new Task("Task A", "http://wx2.sinaimg.cn/large/006m97Kgly1ftmb1yc189j30v90usq66.jpg", "content about A"),
-            new Task("Task B", "https://twgreatdaily.com/images/elastic/Cg4/Cg4s6mwBJleJMoPMGj46.jpg", "content about B"),
-            new Task("Task C", "https://twgreatdaily.com/images/elastic/Sw4/Sw4sgl6mwBJleJMoPMJD6I.jpg", "content about C"),
-            new Task("Task D", "https://twgreatdaily.com/images/elastic/sw4/sw4s6mwBJleJMoPMMz7c.jpg", "content about D"),
-            new Task("Task E", "https://twgreatdaily.com/images/elastic/vw4/vw4s6mwBJleJMoPMNT4i.jpg", "content about E"),
-            new Task("Task F", "https://twgreatdaily.com/images/elastic/VA4/VA4s6mwBJleJMoPMJT62.jpg", "content about F"),
-            new Task("Task G", "https://twgreatdaily.com/images/elastic/Qw4/Qw4s6mwBJleJMoPMIz4w.jpg", "content about G"),
-            new Task("Task H", "https://twgreatdaily.com/images/elastic/Wkh/WkhVxW8BjYh_GJGVMyd8.jpg", "content about H"),
-            new Task("Task I", "https://twgreatdaily.com/images/elastic/ZUh/ZUhVxW8BjYh_GJGVOydT.jpg", "content about I"),
-            new Task("Task J", "https://twgreatdaily.com/images/elastic/bUh/bUhVxW8BjYh_GJGVQieB.jpg", "content about J"),
-    };
-
     private List<Task> taskList = new ArrayList<>();
-
-    private TaskAdapter adapter;
 
     private SwipeRefreshLayout swipeRefresh;
 
@@ -77,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView mUserEmail;
 
     private Context mContext;
+
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
 
     private UserRepository.IUserCallback userCallback = new UserRepository.IUserCallback(){
         @Override
@@ -120,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            initTasks();
             /*mUserName = findViewById(R.id.user_name);
             mUserEmail = findViewById(R.id.user_email);
 
@@ -137,11 +126,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new TaskAdapter(taskList);
-        recyclerView.setAdapter(adapter);
+
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_list_view, new MyTaskFragment());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
 
         swipeRefresh = findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
@@ -162,13 +153,16 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
         }
-        naviView.setCheckedItem(R.id.nav_call);
+        naviView.setCheckedItem(R.id.my_task_menu);
         naviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_call:
-                        requestMyTaskList();
+                    case R.id.my_task_menu:
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.main_list_view, new MyTaskFragment());
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
                         break;
                 }
                 mDrawerLayout.closeDrawers();
@@ -208,15 +202,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void initTasks () {
-        taskList.clear();
-        for (int i = 0; i < 50; i ++) {
-            Random random = new Random();
-            int index = random.nextInt(tasks.length);
-            taskList.add(tasks[index]);
-        }
-    }
-
     private void refreshTasks () {
         new Thread(new Runnable() {
             @Override
@@ -229,52 +214,14 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        initTasks();
-                        adapter.notifyDataSetChanged();
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.main_list_view, new MyTaskFragment());
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
                         swipeRefresh.setRefreshing(false);
                     }
                 });
             }
         }).start();
-    }
-
-    private void requestMyTaskList() {
-        Map<String, String> headers = new HashMap<String, String>();
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String cookie = prefs.getString("cookie", null);
-        headers.put("Cookie", cookie);
-        HttpUtil.getInstance().makeJsonObjectRequestWithHeaders("https://mtask.motrex.co.kr/my-tasks", headers,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        LogUtil.d(TAG, response.toString());
-                        try {
-                            boolean res = response.getBoolean("result");
-                            if (res) {
-                                taskList.clear();
-                                JSONArray myTaskList =  response.getJSONArray("data");
-                                LogUtil.d(TAG, myTaskList.toString());
-                                for (int i = 0; i < myTaskList.length(); i ++) {
-                                    JSONObject object = myTaskList.getJSONObject(i);
-                                    String taskName = object.getString("title");
-                                    String taskDesc = object.getString("desc");
-
-                                    Task task = new Task(taskName, "", android.text.Html.fromHtml(taskDesc).toString());
-                                    taskList.add(task);
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        LogUtil.e(TAG, error.getMessage());
-                    }
-                });
     }
 }

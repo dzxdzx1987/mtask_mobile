@@ -2,27 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_call"
+            android:id="@+id/my_task_menu"
             android:icon="@mipmap/nav_call"
             android:title="My Task"/>
 
         <item
-            android:id="@+id/nav_friends"
+            android:id="@+id/my_board_menu"
             android:icon="@mipmap/nav_friends"
             android:title="My Board"/>
 
         <item
-            android:id="@+id/nav_location"
+            android:id="@+id/favourite_board_menu"
             android:icon="@mipmap/nav_location"
             android:title="Favourite Board"/>
 
         <item
-            android:id="@+id/nav_mail"
+            android:id="@+id/trash_menu"
             android:icon="@mipmap/nav_mail"
             android:title="Trash"/>
 
         <item
-            android:id="@+id/nav_task"
+            android:id="@+id/my_info_menu"
             android:icon="@mipmap/nav_task"
             android:title="My Info"/>
     </group>

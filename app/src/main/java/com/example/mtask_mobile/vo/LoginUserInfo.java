@@ -1,10 +1,12 @@
 package com.example.mtask_mobile.vo;
 
-public class LoginUserInfo {
+import org.litepal.crud.LitePalSupport;
+
+public class LoginUserInfo extends LitePalSupport {
 
     private String companyId;
     private String branchId;
-    private String id;
+    private String uuid;
     private String name;
     private String email;
     private String password;
@@ -16,7 +18,7 @@ public class LoginUserInfo {
     public LoginUserInfo(String companyId, String branchId, String id, String name, String email, String password) {
         this.companyId = companyId;
         this.branchId = branchId;
-        this.id = id;
+        this.uuid = id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -46,14 +48,6 @@ public class LoginUserInfo {
         this.branchId = branchId;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -68,5 +62,13 @@ public class LoginUserInfo {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

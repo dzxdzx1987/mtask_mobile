@@ -1,5 +1,6 @@
 package com.example.mtask_mobile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,15 +28,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
 import com.example.mtask_mobile.com.example.mtask_mobile.vo.Task;
+import com.example.mtask_mobile.repository.UserRepository;
 import com.example.mtask_mobile.util.HttpUtil;
 import com.example.mtask_mobile.util.Utility;
 import com.example.mtask_mobile.vo.BranchGroupInfo;
 import com.example.mtask_mobile.vo.BranchUserInfo;
+import com.example.mtask_mobile.vo.LoginUserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
+import org.litepal.exceptions.DataSupportException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,76 +76,113 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mUserEmail;
 
+    private Context mContext;
+
+    private UserRepository.IUserCallback userCallback = new UserRepository.IUserCallback(){
+        @Override
+        public void onSuccess(JSONObject object) {
+
+        }
+
+        @Override
+        public void onFailure(int errorCode) {
+            switch (errorCode) {
+                case 0:
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mContext, "your login info is not correct", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(mContext, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+                    break;
+                default:
+
+            }
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (prefs.getString("userId", null) == null) {
+        mContext = getApplicationContext();
+        LoginUserInfo userInfo = LitePal.findFirst(LoginUserInfo.class);
+
+        UserRepository.getInstance().userLogin(userInfo, userCallback);
+
+        if (userInfo == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else {
             initTasks();
-            mUserName = findViewById(R.id.user_name);
+            /*mUserName = findViewById(R.id.user_name);
             mUserEmail = findViewById(R.id.user_email);
 
-            String name = prefs.getString("name",null);
-            String email = prefs.getString("email",null);
+            String name = userInfo.getName();
+            String email = userInfo.getEmail();
 
             if (name != null && email != null) {
                 mUserName.setText(name);
                 mUserEmail.setText(email);
-            }
+            }*/
 
-            RecyclerView recyclerView = findViewById(R.id.recycler_view);
-            GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
-            recyclerView.setLayoutManager(layoutManager);
-            adapter = new TaskAdapter(taskList);
-            recyclerView.setAdapter(adapter);
-
-            swipeRefresh = findViewById(R.id.swipe_refresh);
-            swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    refreshTasks();
-                }
-            });
-
-            FloatingActionButton fab = findViewById(R.id.fab);
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            mDrawerLayout = findViewById(R.id.drawer_layout);
-            NavigationView naviView = findViewById(R.id.nav_view);
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
-            }
-            naviView.setCheckedItem(R.id.nav_call);
-            naviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    switch (menuItem.getItemId()) {
-                        case R.id.nav_call:
-                            requestMyTaskList();
-                            break;
-                    }
-                    mDrawerLayout.closeDrawers();
-
-                    return true;
-                }
-            });
-
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(MainActivity.this, "FAB clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
+            initView();
         }
+    }
+
+    private void initView() {
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new TaskAdapter(taskList);
+        recyclerView.setAdapter(adapter);
+
+        swipeRefresh = findViewById(R.id.swipe_refresh);
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshTasks();
+            }
+        });
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView naviView = findViewById(R.id.nav_view);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
+        }
+        naviView.setCheckedItem(R.id.nav_call);
+        naviView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_call:
+                        requestMyTaskList();
+                        break;
+                }
+                mDrawerLayout.closeDrawers();
+
+                return true;
+            }
+        });
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "FAB clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

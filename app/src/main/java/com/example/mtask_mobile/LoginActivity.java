@@ -31,6 +31,7 @@ import com.example.mtask_mobile.vo.LoginUserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.LitePal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,12 +73,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String email = userInfo.getString("email");
                 String name = userInfo.getString("name");
                 String companyId = userInfo.getString("companyId");
+                String branchId = userInfo.getString("branchId");
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-                prefs.edit().putString("userId", id);
-                prefs.edit().putString("email", email);
-                prefs.edit().putString("name", name);
-                prefs.edit().putString("companyId", companyId).apply();
+                LitePal.deleteAll(LoginUserInfo.class);
+
+                LoginUserInfo user = new LoginUserInfo();
+                user.setUuid(id);
+                user.setEmail(email);
+                user.setName(name);
+                user.setPassword(mLoginPassText.getText().toString());
+                user.setCompanyId(companyId);
+                user.setBranchId(branchId);
+                user.save();
 
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());

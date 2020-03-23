@@ -58,6 +58,10 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder>{
 
                 Board board = mBoardList.get(position);
 
+                Intent intent = new Intent(mContext, BoardActivity.class);
+                intent.putExtra("boardId", board.getUuid());
+                mContext.startActivity(intent);
+
             }
         });
         return holder;

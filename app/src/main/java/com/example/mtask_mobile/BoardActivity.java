@@ -1,28 +1,20 @@
 package com.example.mtask_mobile;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-
-public class BoardFragment extends Fragment {
-
+public class BoardActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     private FragmentManager fragmentManager;
 
     private BoardInfoFragment boardInfoFragment = new BoardInfoFragment();
     private BoardTaskListFragment boardTaskListFragment = new BoardTaskListFragment();
     private BoardProgressFragment boardProgressFragment = new BoardProgressFragment();
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -45,45 +37,16 @@ public class BoardFragment extends Fragment {
         }
     };
 
-
-    public BoardFragment() {
-        // Required empty public constructor
-    }
-
-    // TODO: Rename and change types and number of parameters
-    public static BoardFragment newInstance(String param1, String param2) {
-        BoardFragment fragment = new BoardFragment();
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.activity_board);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_board, container, false);
-
-        fragmentManager = getChildFragmentManager();
-        bottomNavigationView =view.findViewById(R.id.navigation_board);
+        fragmentManager = getSupportFragmentManager();
+        bottomNavigationView = findViewById(R.id.navigation_board);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frame_layout, boardInfoFragment).commitAllowingStateLoss();
-        return view;
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        transaction.replace(R.id.frame_layout, boardTaskListFragment).commitAllowingStateLoss();
     }
 }

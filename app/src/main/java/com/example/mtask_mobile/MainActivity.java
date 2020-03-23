@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
-    private List<Task> taskList = new ArrayList<>();
-
     private SwipeRefreshLayout swipeRefresh;
 
     private TextView mUserName;
@@ -163,6 +161,20 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTransaction.replace(R.id.main_list_view, new MyTaskFragment());
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
+                        break;
+                    case R.id.my_board_menu:
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.main_list_view, new BoardListFragment());
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                        break;
+                    case R.id.favourite_board_menu:
+                        break;
+                    case R.id.trash_menu:
+                        break;
+                    case R.id.my_info_menu:
+                        break;
+                    default:
                         break;
                 }
                 mDrawerLayout.closeDrawers();

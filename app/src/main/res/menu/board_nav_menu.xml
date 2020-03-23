@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_board_info"
+        android:icon="@mipmap/nav_call"
+        android:title="@string/board_info_menu" />
+
+    <item
+        android:id="@+id/navigation_board_task_list"
+        android:icon="@mipmap/nav_call"
+        android:title="@string/board_task_list_menu" />
+
+    <item
+        android:id="@+id/navigation_board_progress"
+        android:icon="@mipmap/nav_call"
+        android:title="@string/board_progress_menu" />
+
+</menu>

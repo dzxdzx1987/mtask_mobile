@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".BoardInfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ExpandableListView
+        android:id="@+id/expand_lv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Board Info" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

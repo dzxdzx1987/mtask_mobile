@@ -3,7 +3,6 @@ package com.example.mtask_mobile.vo;
 import org.litepal.crud.LitePalSupport;
 
 public class TaskInfo extends LitePalSupport {
-    private long id;
     private String boardId;
     private String boardName;
     private String parentId;
@@ -16,15 +15,27 @@ public class TaskInfo extends LitePalSupport {
     private String title;
     private String desc;
 
+
+    private String constructorName;
+    private String createdDateTime;
+
     public TaskInfo() {
     }
 
-    public long getId() {
-        return id;
+    public String getConstructorName() {
+        return constructorName;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setConstructorName(String constructorName) {
+        this.constructorName = constructorName;
+    }
+
+    public String getCreatedDateTime() {
+        return createdDateTime;
+    }
+
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = createdDateTime;
     }
 
     public String getBoardId() {

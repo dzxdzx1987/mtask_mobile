@@ -1,6 +1,7 @@
 package com.example.mtask_mobile;
 
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -21,7 +22,7 @@ import org.litepal.LitePal;
 
 import java.util.List;
 
-public class TaskActivity extends AppCompatActivity {
+public class TaskActivity extends BaseActivity {
     private static final String TAG = TaskActivity.class.getSimpleName();
 
     public static final String TASK_NAME = "task_name";
@@ -78,5 +79,13 @@ public class TaskActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNetworkStateChanged(NetworkInfo networkInfo) {
+        if (networkInfo == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -36,7 +37,7 @@ import org.litepal.LitePal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = LoginActivity.class.getSimpleName();
 
     private Context mContext;
@@ -47,7 +48,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mLoginPassText;
     private ProgressDialog progressDialog;
 
-    private final int MESSAGE_EXIT = 1;
+    private final int MESSAGE_NETWORK_DISABLE = 1;
+    private final int MESSAGE_NETWORK_ENABLE = 2;
     public final static int SELECT_BRANCH_RESULT = 10;
 
 
@@ -55,9 +57,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case MESSAGE_EXIT:
-                    finish();
+                case MESSAGE_NETWORK_DISABLE:
+                    mLoginBtn.setEnabled(false);
+                    //finish();
                     break;
+                case MESSAGE_NETWORK_ENABLE:
+                    mLoginBtn.setEnabled(true);
                 default:
             }
             super.handleMessage(msg);
@@ -125,13 +130,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mContext = getApplicationContext();
-        if (!isNetworkConnected()) {
-            Toast.makeText(this, "Network is unavailable.", Toast.LENGTH_LONG).show();
-            Message message = new Message();
-            message.what = MESSAGE_EXIT;
-            mHandler.sendMessageDelayed(message, 3000);
-        }
-
         initView();
     }
 
@@ -143,6 +141,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mLoginPassText = findViewById(R.id.login_pass_text);
         mLoginBtn = findViewById(R.id.login_btn);
         mLoginBtn.setOnClickListener(this);
+
+        if (!isNetworkConnected()) {
+            Toast.makeText(this, "Network is unavailable.", Toast.LENGTH_LONG).show();
+            mLoginBtn.setEnabled(false);
+        } else {
+            mLoginBtn.setEnabled(true);
+        }
     }
 
     private boolean isNetworkConnected() {
@@ -194,6 +199,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onNetworkStateChanged(NetworkInfo networkInfo) {
+        Message message = new Message();
+        if (networkInfo == null) {
+            Toast.makeText(this, "Network is unavailable.", Toast.LENGTH_LONG).show();
+            message.what = MESSAGE_NETWORK_DISABLE;
+        } else {
+            message.what = MESSAGE_NETWORK_ENABLE;
+        }
+        mHandler.sendMessageDelayed(message, 3000);
+    }
 
     private void showProgressDialog() {
         if (progressDialog == null) {

@@ -1,10 +1,13 @@
 package com.example.mtask_mobile;
 
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -30,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
 import com.example.mtask_mobile.com.example.mtask_mobile.vo.Task;
+import com.example.mtask_mobile.livedata.NetworkLiveData;
 import com.example.mtask_mobile.repository.UserRepository;
 import com.example.mtask_mobile.util.HttpUtil;
 import com.example.mtask_mobile.util.Utility;
@@ -49,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
@@ -121,6 +125,13 @@ public class MainActivity extends AppCompatActivity {
 
             initView();
         }
+
+        NetworkLiveData.getInstance(this).observe(this, new Observer<NetworkInfo>() {
+            @Override
+            public void onChanged(@Nullable NetworkInfo networkInfo) {
+                LogUtil.d(TAG, "onChanged: networkInfo=" +networkInfo);
+            }
+        });
     }
 
     private void initView() {
@@ -235,5 +246,13 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+
+    @Override
+    public void onNetworkStateChanged(NetworkInfo networkInfo) {
+        if (networkInfo == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 }

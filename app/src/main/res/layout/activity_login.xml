@@ -18,7 +18,7 @@
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal" />
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/select_branch_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:layout_marginTop="10dp"/>
 
         <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -45,10 +45,10 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="Email" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Password Label -->
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -58,9 +58,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="Password"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/login_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

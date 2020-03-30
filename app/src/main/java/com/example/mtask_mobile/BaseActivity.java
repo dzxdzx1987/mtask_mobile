@@ -1,18 +1,12 @@
 package com.example.mtask_mobile;
 
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.Observer;
 import android.content.Context;
-import android.content.Intent;
 import android.net.NetworkInfo;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.example.mtask_mobile.livedata.NetworkLiveData;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseActivity extends AppCompatActivity {

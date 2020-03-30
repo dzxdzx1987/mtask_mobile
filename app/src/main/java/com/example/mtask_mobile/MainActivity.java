@@ -1,57 +1,39 @@
 package com.example.mtask_mobile;
 
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
-import com.example.mtask_mobile.com.example.mtask_mobile.vo.Task;
 import com.example.mtask_mobile.livedata.NetworkLiveData;
 import com.example.mtask_mobile.repository.UserRepository;
-import com.example.mtask_mobile.util.HttpUtil;
-import com.example.mtask_mobile.util.Utility;
-import com.example.mtask_mobile.vo.BranchGroupInfo;
-import com.example.mtask_mobile.vo.BranchUserInfo;
 import com.example.mtask_mobile.vo.LoginUserInfo;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
-import org.litepal.exceptions.DataSupportException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 public class MainActivity extends BaseActivity {
 

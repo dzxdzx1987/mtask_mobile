@@ -10,8 +10,8 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,22 +20,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
 import com.example.mtask_mobile.repository.UserRepository;
-import com.example.mtask_mobile.util.DialogUtil;
-import com.example.mtask_mobile.util.HttpUtil;
 import com.example.mtask_mobile.vo.BranchGroupInfo;
 import com.example.mtask_mobile.vo.LoginUserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.litepal.LitePal;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = LoginActivity.class.getSimpleName();

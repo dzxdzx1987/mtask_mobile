@@ -1,16 +1,20 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.board.view;
 
 
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.example.mtask_mobile.board.adapter.BoardUserAdapter;
+import com.example.mtask_mobile.R;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
 import com.example.mtask_mobile.repository.UserRepository;
 
@@ -41,12 +45,30 @@ public class BoardInfoFragment extends Fragment {
 
     private BoardUserAdapter mAdapter;
 
+    private final static int MESSAGE_GET_DATA = 0;
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_GET_DATA:
+                    mAdapter = new BoardUserAdapter(mContext, mGroupList, mItemSet);
+                    mExpandableListView.setAdapter(mAdapter);
+                    break;
+                default:
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
     private UserRepository.IUserCallback userCallback = new UserRepository.IUserCallback() {
         @Override
         public void onSuccess(JSONObject object) {
             ArrayList<String> itemList1 = new ArrayList<>();
 
             try {
+                mItemSet.clear();
                 JSONArray userList =  object.getJSONArray("data");
                 LogUtil.d(TAG, userList.toString());
                 for (int i = 0; i < userList.length(); i ++) {
@@ -55,7 +77,10 @@ public class BoardInfoFragment extends Fragment {
                     itemList1.add(name);
                 }
                 mItemSet.add(itemList1);
-                mAdapter.notifyDataSetChanged();
+                //mAdapter.notifyDataSetChanged();
+                Message message= new Message();
+                message.what = MESSAGE_GET_DATA;
+                mHandler.sendMessage(message);
 
             } catch (JSONException e) {
                 LogUtil.e(TAG, e.getMessage());
@@ -84,11 +109,9 @@ public class BoardInfoFragment extends Fragment {
         mGroupList.add("Board User");
         mItemSet = new ArrayList<>();
 
-        mAdapter = new BoardUserAdapter(mContext, mGroupList, mItemSet);
         mExpandableListView = view.findViewById(R.id.expand_lv);
-        mExpandableListView.setAdapter(mAdapter);
-
         mBoardUserCnt = view.findViewById(R.id.board_user_cnt);
+
         return view;
     }
 
@@ -103,25 +126,9 @@ public class BoardInfoFragment extends Fragment {
 
     }
 
-    private void initData() {
-        mGroupList = new ArrayList<>();
-        mGroupList.add("我的家人");
-        mGroupList.add("我的朋友");
-        mGroupList.add("黑名单");
-        mItemSet = new ArrayList<>();
-        ArrayList<String> itemList1 = new ArrayList<>();
-        itemList1.add("大妹");
-        itemList1.add("二妹");
-        itemList1.add("三妹");
-        ArrayList<String> itemList2 = new ArrayList<>();
-        itemList2.add("大美");
-        itemList2.add("二美");
-        itemList2.add("三美");
-        ArrayList<String> itemList3 = new ArrayList<>();
-        itemList3.add("狗蛋");
-        itemList3.add("二丫");
-        mItemSet.add(itemList1);
-        mItemSet.add(itemList2);
-        mItemSet.add(itemList3);
+    @Override
+    public void onDestroy() {
+        LogUtil.d(TAG, "onDestroy");
+        super.onDestroy();
     }
 }

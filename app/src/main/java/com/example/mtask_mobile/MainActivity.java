@@ -8,6 +8,9 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.mtask_mobile.board.view.BoardListFragment;
+import com.example.mtask_mobile.task.view.MyTaskFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import androidx.fragment.app.FragmentManager;
@@ -16,7 +19,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
@@ -87,8 +90,6 @@ public class MainActivity extends BaseActivity {
         mContext = getApplicationContext();
         LoginUserInfo userInfo = LitePal.findFirst(LoginUserInfo.class);
 
-        UserRepository.getInstance().userLogin(userInfo, userCallback);
-
         if (userInfo == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -106,6 +107,8 @@ public class MainActivity extends BaseActivity {
             }*/
 
             initView();
+
+            UserRepository.getInstance().userLogin(userInfo, userCallback);
         }
 
         NetworkLiveData.getInstance(this).observe(this, new Observer<NetworkInfo>() {

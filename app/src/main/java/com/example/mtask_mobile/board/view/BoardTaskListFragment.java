@@ -1,4 +1,4 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.board.view;
 
 
 import android.content.Context;
@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mtask_mobile.board.adapter.BoardTaskAdapter;
+import com.example.mtask_mobile.MTaskApplication;
+import com.example.mtask_mobile.R;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
 import com.example.mtask_mobile.repository.TaskRepository;
 import com.example.mtask_mobile.vo.TaskInfo;

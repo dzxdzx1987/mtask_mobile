@@ -1,12 +1,16 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.board.view;
 
 import android.content.Intent;
 import android.net.NetworkInfo;
 import androidx.annotation.NonNull;
+
+import com.example.mtask_mobile.BaseActivity;
+import com.example.mtask_mobile.LoginActivity;
+import com.example.mtask_mobile.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -26,13 +30,13 @@ public class BoardActivity extends BaseActivity {
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_board_info:
-                    transaction.replace(R.id.frame_layout, boardInfoFragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.frame_layout, boardInfoFragment).commit();
                     return true;
                 case R.id.navigation_board_task_list:
-                    transaction.replace(R.id.frame_layout, boardTaskListFragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.frame_layout, boardTaskListFragment).commit();
                     return true;
                 case R.id.navigation_board_progress:
-                    transaction.replace(R.id.frame_layout, boardProgressFragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.frame_layout, boardProgressFragment).commit();
                     return true;
             }
             return false;
@@ -49,7 +53,7 @@ public class BoardActivity extends BaseActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frame_layout, boardTaskListFragment).commitAllowingStateLoss();
+        transaction.add(R.id.frame_layout, boardTaskListFragment).commitAllowingStateLoss();
     }
 
     @Override

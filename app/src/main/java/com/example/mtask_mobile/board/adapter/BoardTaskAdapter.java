@@ -1,4 +1,4 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.board.adapter;
 
 import android.content.Context;
 
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mtask_mobile.R;
 import com.example.mtask_mobile.vo.TaskInfo;
 
 import java.util.List;
@@ -50,6 +51,11 @@ public class BoardTaskAdapter extends RecyclerView.Adapter<BoardTaskAdapter.View
             mContext = viewGroup.getContext();
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.board_task_item, viewGroup, false);
+        if (i == 0) {
+            view.setTag(false);
+        } else {
+            view.setTag(true);
+        }
         final ViewHolder holder = new ViewHolder(view);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,6 +84,7 @@ public class BoardTaskAdapter extends RecyclerView.Adapter<BoardTaskAdapter.View
             holder.boardFolder.setVisibility(View.GONE);
         } else {
             holder.boardFolder.setVisibility(View.VISIBLE);
+            holder.boardFolder.setTextSize(20);
         }
 
         holder.boardTaskCreator.setText(task.getConstructorName());
@@ -87,5 +94,14 @@ public class BoardTaskAdapter extends RecyclerView.Adapter<BoardTaskAdapter.View
     @Override
     public int getItemCount() {
         return mTaskList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        int type = 0;
+        if (mTaskList.get(position).isFolder()) {
+            type = 1;
+        }
+        return type;
     }
 }

@@ -1,11 +1,11 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.task.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.mtask_mobile.TaskDetailFragment;
+import com.example.mtask_mobile.task.view.TaskDetailFragment;
 
 import java.util.List;
 

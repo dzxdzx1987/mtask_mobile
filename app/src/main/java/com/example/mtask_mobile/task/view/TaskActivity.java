@@ -1,18 +1,21 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.task.view;
 
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+
+import com.example.mtask_mobile.BaseActivity;
+import com.example.mtask_mobile.LoginActivity;
+import com.example.mtask_mobile.R;
+import com.example.mtask_mobile.task.adapter.TaskDetailFragmentStateAdapter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;

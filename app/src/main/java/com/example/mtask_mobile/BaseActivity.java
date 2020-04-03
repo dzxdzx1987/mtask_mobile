@@ -1,11 +1,10 @@
 package com.example.mtask_mobile;
 
-import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.net.NetworkInfo;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
 

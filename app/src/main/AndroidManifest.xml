@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".BoardActivity"
+        <activity android:name=".board.view.BoardActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".LoginActivity"
             android:launchMode="singleTop"/>
@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TaskActivity"
+            android:name=".task.view.TaskActivity"
             android:theme="@style/TaskActivityTheme" />
     </application>
 

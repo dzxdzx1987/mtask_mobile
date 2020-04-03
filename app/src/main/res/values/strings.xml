@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">mtask_mobile</string>
-    <string name="title_activity_task">Task</string>
     <string name="board_info_menu">Information</string>
     <string name="board_task_list_menu">Task List</string>
     <string name="board_progress_menu">Progress</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

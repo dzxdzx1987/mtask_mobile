@@ -1,4 +1,4 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.board.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.mtask_mobile.R;
 
 import java.util.ArrayList;
 

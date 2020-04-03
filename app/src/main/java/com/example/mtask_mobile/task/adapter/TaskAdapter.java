@@ -1,4 +1,4 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.task.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.mtask_mobile.R;
 import com.example.mtask_mobile.com.example.mtask_mobile.vo.Task;
+import com.example.mtask_mobile.task.view.TaskActivity;
 
 import java.util.List;
 

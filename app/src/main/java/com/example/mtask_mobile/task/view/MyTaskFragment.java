@@ -1,4 +1,4 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.task.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.mtask_mobile.MTaskApplication;
+import com.example.mtask_mobile.R;
+import com.example.mtask_mobile.task.adapter.TaskAdapter;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
 import com.example.mtask_mobile.com.example.mtask_mobile.vo.Task;
 import com.example.mtask_mobile.util.HttpUtil;

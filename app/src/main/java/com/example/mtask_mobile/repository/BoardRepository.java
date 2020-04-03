@@ -8,10 +8,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.mtask_mobile.MTaskApplication;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
-import com.example.mtask_mobile.com.example.mtask_mobile.vo.Task;
 import com.example.mtask_mobile.util.HttpUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

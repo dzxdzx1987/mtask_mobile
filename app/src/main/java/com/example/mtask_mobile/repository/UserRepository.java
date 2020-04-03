@@ -1,18 +1,14 @@
 package com.example.mtask_mobile.repository;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.example.mtask_mobile.LoginActivity;
 import com.example.mtask_mobile.MTaskApplication;
-import com.example.mtask_mobile.MainActivity;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
-import com.example.mtask_mobile.util.DialogUtil;
 import com.example.mtask_mobile.util.HttpUtil;
 import com.example.mtask_mobile.vo.LoginUserInfo;
 

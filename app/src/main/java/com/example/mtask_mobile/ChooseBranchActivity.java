@@ -2,7 +2,6 @@ package com.example.mtask_mobile;
 
 import android.content.Intent;
 import android.net.NetworkInfo;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class ChooseBranchActivity extends BaseActivity {

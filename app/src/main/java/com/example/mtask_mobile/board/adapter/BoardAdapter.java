@@ -1,4 +1,4 @@
-package com.example.mtask_mobile;
+package com.example.mtask_mobile.board.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mtask_mobile.R;
+import com.example.mtask_mobile.board.view.BoardActivity;
 import com.example.mtask_mobile.vo.Board;
 
 import java.util.List;

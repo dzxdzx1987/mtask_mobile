@@ -72,4 +72,34 @@ public class BoardRepository {
                     }
                 });
     }
+
+    public void requestBoardStatusList(String boardId, final IBoardCallback callback) {
+        Map<String, String> headers = new HashMap<String, String>();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MTaskApplication.getContext());
+        String cookie = prefs.getString("cookie", null);
+        headers.put("Cookie", cookie);
+        HttpUtil.getInstance().makeJsonObjectRequestWithHeaders("https://mtask.motrex.co.kr/boards/" + boardId + "/stats", headers,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        LogUtil.d(TAG, response.toString());
+                        try {
+                            boolean res = response.getBoolean("result");
+                            if (res) {
+                                callback.onSuccess(response);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onFailure(PASS_ERROR);
+                        LogUtil.e(TAG, error.getMessage());
+                    }
+                });
+    }
 }

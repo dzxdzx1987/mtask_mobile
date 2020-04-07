@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.mtask_mobile.board.adapter.BoardUserAdapter;
 import com.example.mtask_mobile.R;
 import com.example.mtask_mobile.com.example.mtask.util.LogUtil;
+import com.example.mtask_mobile.repository.BoardRepository;
 import com.example.mtask_mobile.repository.UserRepository;
 
 import org.json.JSONArray;
@@ -30,22 +31,23 @@ import java.util.ArrayList;
  */
 public class BoardInfoFragment extends Fragment {
     private final static String TAG = BoardInfoFragment.class.getSimpleName();
-
     private ArrayList<String> mGroupList;
     //item数据
     private ArrayList<ArrayList<String>> mItemSet;
-
     private Context mContext;
-
     private ExpandableListView mExpandableListView;
-
     private String mBoardId;
-
     private TextView mBoardUserCnt;
-
     private BoardUserAdapter mAdapter;
-
+    private TextView mTotalCntTv;
+    private TextView mOpenCntTv;
+    private TextView mUnderReviewCntTv;
+    private TextView mOngoingCntTv;
+    private TextView mReviewCntTv;
+    private TextView mPendingCntTv;
+    private TextView mClosedCntTv;
     private final static int MESSAGE_GET_DATA = 0;
+    private final static int MESSAGE_GET_STATUS = 1;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -55,6 +57,20 @@ public class BoardInfoFragment extends Fragment {
                     mAdapter = new BoardUserAdapter(mContext, mGroupList, mItemSet);
                     mExpandableListView.setAdapter(mAdapter);
                     break;
+                case MESSAGE_GET_STATUS:
+                    try {
+                        JSONObject object = (JSONObject) msg.obj;
+                        mTotalCntTv.setText(object.getString("total"));
+                        mOpenCntTv.setText(object.getString("open"));
+                        mUnderReviewCntTv.setText(object.getString("underReview"));
+                        mOngoingCntTv.setText(object.getString("doing"));
+                        mReviewCntTv.setText(object.getString("review"));
+                        mPendingCntTv.setText(object.getString("pending"));
+                        mClosedCntTv.setText(object.getString("closed"));
+                    } catch (JSONException e) {
+                        LogUtil.e(TAG, e.getMessage());
+                    }
+
                 default:
                     break;
             }
@@ -94,6 +110,28 @@ public class BoardInfoFragment extends Fragment {
         }
     };
 
+    private BoardRepository.IBoardCallback boardCallback = new BoardRepository.IBoardCallback() {
+        @Override
+        public void onSuccess(JSONObject object) {
+            try {
+                JSONArray status = object.getJSONArray("data");
+                LogUtil.d(TAG, status.getJSONObject(0).toString());
+                JSONObject obj = status.getJSONObject(0);
+                Message message = new Message();
+                message.what = MESSAGE_GET_STATUS;
+                message.obj = obj;
+                mHandler.sendMessage(message);
+            } catch (JSONException e) {
+                LogUtil.e(TAG, e.getMessage());
+            }
+        }
+
+        @Override
+        public void onFailure(int errorCode) {
+
+        }
+    };
+
     public BoardInfoFragment() {
         // Required empty public constructor
     }
@@ -112,6 +150,14 @@ public class BoardInfoFragment extends Fragment {
         mExpandableListView = view.findViewById(R.id.expand_lv);
         mBoardUserCnt = view.findViewById(R.id.board_user_cnt);
 
+        mTotalCntTv = view.findViewById(R.id.board_total_tasks_cnt);
+        mOpenCntTv = view.findViewById(R.id.board_open_tasks_cnt);
+        mUnderReviewCntTv = view.findViewById(R.id.board_under_review_tasks_cnt);
+        mOngoingCntTv = view.findViewById(R.id.board_ongoing_tasks_cnt);
+        mReviewCntTv = view.findViewById(R.id.board_review_tasks_cnt);
+        mPendingCntTv = view.findViewById(R.id.board_pending_tasks_cnt);
+        mClosedCntTv = view.findViewById(R.id.board_close_tasks_cnt);
+
         return view;
     }
 
@@ -123,6 +169,7 @@ public class BoardInfoFragment extends Fragment {
         mBoardId = getActivity().getIntent().getStringExtra("boardId");
         LogUtil.d(TAG, "request board id:" + mBoardId);
         UserRepository.getInstance().requestBranchUserListByBoardId(mBoardId, userCallback);
+        BoardRepository.getInstance().requestBoardStatusList(mBoardId, boardCallback);
 
     }
 

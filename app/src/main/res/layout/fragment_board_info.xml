@@ -32,6 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextTitle"
                 android:text="TASKS :"/>
 
             <TextView
@@ -50,6 +51,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextTitle"
                 android:text="새로운 업무 :"/>
 
             <TextView
@@ -68,6 +70,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextTitle"
                 android:text="검토중인 업무 :"/>
 
             <TextView
@@ -86,6 +89,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextTitle"
                 android:text="진행중인 업무 :"/>
 
             <TextView
@@ -104,6 +108,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextTitle"
                 android:text="확인요청 업무 :"/>
 
             <TextView
@@ -122,6 +127,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextTitle"
                 android:text="보류된 업무 :"/>
 
             <TextView
@@ -140,6 +146,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextTitle"
                 android:text="완료된 업무 :"/>
 
             <TextView

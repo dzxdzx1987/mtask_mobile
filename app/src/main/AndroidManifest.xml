@@ -14,19 +14,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".board.view.BoardActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".LoginActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".ChooseBranchActivity"
-            android:launchMode="singleTop"/>
+        <activity android:name=".task.view.NewTaskActivity" />
+        <activity android:name=".board.view.NewBoardActivity" />
+        <activity
+            android:name=".board.view.BoardActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".LoginActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ChooseBranchActivity"
+            android:launchMode="singleTop" />
 
         <service
             android:name=".service.AutoUpdateService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

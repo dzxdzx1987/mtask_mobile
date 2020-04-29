@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.mtask_mobile.board.view.BoardListFragment;
+import com.example.mtask_mobile.board.view.NewBoardActivity;
 import com.example.mtask_mobile.task.view.MyTaskFragment;
+import com.example.mtask_mobile.task.view.NewTaskActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import androidx.fragment.app.FragmentManager;
@@ -27,6 +29,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -137,7 +140,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        final FloatingActionButton fab = findViewById(R.id.fab);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -183,6 +186,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(MainActivity.this, "FAB clicked", Toast.LENGTH_SHORT).show();
+                showPopupMenu(fab);
             }
         });
     }
@@ -239,5 +243,42 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+    }
+
+    private void showPopupMenu(View view) {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(MainActivity.this, view);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.pop_new_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 控件每一个item的点击事件
+                switch (item.getItemId()) {
+                    case R.id.create_new_task:
+                        Intent intent1  = new Intent(MainActivity.this, NewTaskActivity.class);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent1);
+                        break;
+                    case R.id.create_new_board:
+                        Intent intent2  = new Intent(MainActivity.this, NewBoardActivity.class);
+                        intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent2);
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                // 控件消失时的事件
+            }
+        });
+
     }
 }
